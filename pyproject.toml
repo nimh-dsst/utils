@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "boto3>=1.35.97",
+    "openpyxl>=3.1.5",
+    "pandas>=2.2.3",
 ]
 
 [dependency-groups]
@@ -16,4 +18,5 @@ dev = [
     "ipython>=8.31.0",
     "isort>=5.13.2",
     "mypy>=1.14.1",
+    "pandas-stubs>=2.2.3.241126",
 ]
