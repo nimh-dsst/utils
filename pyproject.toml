@@ -6,8 +6,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "boto3>=1.35.97",
+    "eutils>=0.6.0",
+    "metapub>=0.5.12",
     "openpyxl>=3.1.5",
     "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
+    "setuptools>=75.8.0",
+    "tqdm>=4.67.1",
 ]
 
 [dependency-groups]

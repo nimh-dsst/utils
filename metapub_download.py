@@ -28,7 +28,7 @@ DELAY = 1.0 / REQUESTS_PER_SECOND
 _last_request_time = 0
 
 
-def find_with_timeout(pmid: int, timeout: int = 5) -> FindIt:
+def find_with_timeout(pmid: int, timeout: int = 10) -> FindIt:
     # Add rate limiting
     global _last_request_time
     current_time = time.time()
@@ -149,7 +149,7 @@ async def get_urls(pmid: int) -> dict[str, int | str | None]:
 
 
 async def gather_urls(pmids: set[int]) -> pd.DataFrame:
-    chunk_size = 5  # Reduce chunk size
+    chunk_size = 10  # Reduce chunk size if needed
     all_results = []
     total_pmids = len(pmids)
 
@@ -210,19 +210,46 @@ async def gather_urls(pmids: set[int]) -> pd.DataFrame:
 
 
 async def main() -> None:
-    logger.info("Starting main process")
-    df: pd.DataFrame = pd.read_excel(
-        "pmid_compare_total_pmid_articles_osm-pdf-uploads_pdfs.xlsx",
-        sheet_name="Missing",
-    )
-    pmids: set[int] = set(df["Missing PMIDs"].astype(int))
-    logger.info(f"Loaded {len(pmids)} PMIDs from Excel file")
+    try:
+        logger.info("Starting main process")
+        df: pd.DataFrame = pd.read_excel(
+            "pmid_compare_total_pmid_articles_osm-pdf-uploads_pdfs.xlsx",
+            sheet_name="Missing",
+        )
+        pmids: set[int] = set(df["Missing PMIDs"].astype(int))
+        logger.info(f"Loaded {len(pmids)} PMIDs from Excel file")
 
-    urls_df = await gather_urls(pmids)
-    logger.info("Saving results to CSV file")
-    urls_df.to_csv("missing_pmids_urls.csv", index=False)
-    logger.info("Process completed successfully")
+        urls_df = await gather_urls(pmids)
+        logger.info("Saving results to CSV file")
+        urls_df.to_csv("missing_pmids_urls.csv", index=False)
+        logger.info("Process completed successfully")
+    except Exception as e:
+        logger.error(f"Fatal error in main: {e}")
+        raise
+    finally:
+        # Clean up any remaining tasks
+        tasks = [
+            t for t in asyncio.all_tasks() if t is not asyncio.current_task()
+        ]
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Ensure the event loop is closed
+        loop = asyncio.get_event_loop()
+        loop.stop()
+        loop.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("Process interrupted by user")
+    except Exception as e:
+        logger.error(f"Process failed: {e}")
+    finally:
+        # Force exit if still hanging
+        import sys
+
+        sys.exit(0)
