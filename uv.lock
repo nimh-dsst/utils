@@ -1272,6 +1272,12 @@ wheels = [
 ]
 
 [[package]]
+name = "python-doi"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/03/b71a3b7f4deba34b60b2d65342facaf916c5dcb62e31494dc4356d153550/python-doi-0.2.0.tar.gz", hash = "sha256:2e01e56fb319bd219ea8586baa43a1fc794dfe45a83156ac70242c4ce961fd9a", size = 245853 }
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1543,6 +1549,7 @@ dependencies = [
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "pdf2doi" },
+    { name = "python-doi" },
     { name = "python-dotenv" },
     { name = "setuptools" },
     { name = "tqdm" },
@@ -1570,6 +1577,7 @@ requires-dist = [
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pdf2doi", specifier = ">=1.7" },
+    { name = "python-doi", specifier = ">=0.2.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "setuptools", specifier = ">=75.8.0" },
     { name = "tqdm", specifier = ">=4.67.1" },

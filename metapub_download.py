@@ -213,7 +213,7 @@ async def main() -> None:
     try:
         logger.info("Starting main process")
         df: pd.DataFrame = pd.read_excel(
-            "pmid_compare_total_pmid_articles_osm-pdf-uploads_pdfs.xlsx",
+            "pmid_compare_total_vs_s3_20240117.xlsx",
             sheet_name="Missing",
         )
         pmids: set[int] = set(df["Missing PMIDs"].astype(int))

@@ -13,6 +13,7 @@ dependencies = [
     "openpyxl>=3.1.5",
     "pandas>=2.2.3",
     "pdf2doi>=1.7",
+    "python-doi>=0.2.0",
     "python-dotenv>=1.0.1",
     "setuptools>=75.8.0",
     "tqdm>=4.67.1",
