@@ -29,7 +29,7 @@ process_pdf_directory <- function(dir_path) {
 }
 
 # Base directory containing subdirectories of PDFs
-base_path <- file.path("/data/NIMH_scratch/lawrimorejg/pub_data/sample_pdfs/sample_extracts")
+base_path <- file.path("/home/lawrimorejg/pub_data/pdfs/pdf_texts")
 
 # Get all subdirectories
 subdirs <- list.dirs(base_path, full.names = TRUE, recursive = FALSE)
@@ -38,8 +38,15 @@ if (length(subdirs) == 0) {
   stop("No subdirectories found in: ", base_path)
 }
 
-# Process each subdirectory
-results <- sapply(subdirs, process_pdf_directory)
+# Set up parallel processing
+library(parallel)
+num_cores <- 10
+num_cores <- max(1, num_cores)  # Ensure at least one core is used
+
+# Process each subdirectory in parallel
+results <- mclapply(subdirs, process_pdf_directory, mc.cores = num_cores)
+# Convert results list to logical vector
+results <- unlist(results)
 
 # Combine all results files
 all_results <- data.frame()
